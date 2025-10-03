@@ -402,7 +402,13 @@ class List(Object, Editable):
 
                 redis.call("SET", item.id, item_data)
                 redis.call("SADD", "items", item.id)
-                redis.call("RPUSH", list.id .. ".items", item.id)
+
+                if features.addNewItemsToTop then
+                    redis.call("LPUSH", list.id .. ".items", item.id)
+                else
+                    redis.call("RPUSH", list.id .. ".items", item.id)
+                end
+
                 redis.call("ZADD", list.id .. ".items.by_title", 0, id_by_title)
                 redis.call("HSET", list.id .. ".items.by_title.lexical", item.id, id_by_title)
                 if features.assign and list.assign_by_default then
@@ -561,7 +567,7 @@ class List(Object, Editable):
             raise error.ValueError('title_empty')
         if 'order' in attrs and attrs['order'] not in {None, 'title'}:
             raise error.ValueError(f"Unknown order {attrs['order']}")
-        features = {'check', 'assign', 'vote', 'value', 'time', 'location', 'play'}
+        features = {'check', 'assign', 'vote', 'value', 'time', 'location', 'play', 'addNewItemsToTop'}
         if 'features' in attrs and not set(attrs['features']) <= features:
             raise error.ValueError('feature_unknown')
         if 'mode' in attrs and attrs['mode'] not in {'collaborate', 'view'}:
