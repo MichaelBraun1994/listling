@@ -224,14 +224,24 @@ listling.ListPage = class extends micro.core.Page {
             moveItemDrag: event => {
                 // NOTE: This may be better done by micro.OL itself if some reset attribute is set
                 this._itemsOL.insertBefore(event.detail.li, event.detail.from);
+                let from = event.detail.li.item;
                 let to = event.detail.to && event.detail.to.item;
+
                 if (to) {
                     let i = this._data.presentItems.findIndex(item => item.id === to.id);
                     to = this._data.presentItems[i - 1] || null;
                 } else {
-                    to = this._data.presentItems[this._data.presentItems.length - 1];
+                    let oldIdx = this._data.presentItems.findIndex(item => item.id === from.id);
+                    let lastItemIdx = this._data.presentItems.length - 1;
+
+                    if (oldIdx === lastItemIdx) {
+                        // Move last item to head
+                        to = null;
+                    } else {
+                        to = this._data.presentItems[lastItemIdx];
+                    }
                 }
-                this._moveItem(event.detail.li.item, to);
+                this._moveItem(from, to);
             },
 
             moveItemKey: event => {
