@@ -746,7 +746,7 @@ listling.ItemElement = class extends HTMLLIElement {
     }
 
     attachedCallback() {
-        (async() => {
+        (async () => {
             await ui.page.ready;
             this._activity = ui.page.activity;
         })().catch(micro.util.catch);
