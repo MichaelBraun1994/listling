@@ -932,7 +932,7 @@ micro.bind.transforms.SHORT_DAY_FORMAT = Object.assign(
 );
 
 /** Test if *a* and *b* are (strictly) unequal. */
-micro.bind.transforms.neq = function (ctx, a, b) {
+micro.bind.transforms.neq = function(ctx, a, b) {
     return a !== b;
 };
 
@@ -942,7 +942,7 @@ micro.bind.transforms.neq = function (ctx, a, b) {
  * *dateFormat* and *clockFormat* are :meth:`Date.toLocaleString` *options* and applied depending on
  * the precision of *time*.
  */
-micro.bind.transforms.formatTime = function (ctx, time, dateFormat, clockFormat) {
+micro.bind.transforms.formatTime = function(ctx, time, dateFormat, clockFormat) {
     if (!time) {
         return "";
     }
