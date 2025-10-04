@@ -173,7 +173,7 @@ listling.ListPage = class extends micro.core.Page {
                 this._form.elements.title.focus();
             }),
 
-            edit: async () => {
+            edit: async() => {
                 try {
                     const list = await ui.call("POST", `/api/lists/${this._data.lst.id}`, {
                         title: this._form.elements.title.value,
@@ -199,7 +199,7 @@ listling.ListPage = class extends micro.core.Page {
                 this._replayEvents();
             },
 
-            subscribeUnsubscribe: async () => {
+            subscribeUnsubscribe: async() => {
                 const op = this._data.lst.activity.user_subscribed ? "unsubscribe" : "subscribe";
                 if (op === "subscribe") {
                     const pushSubscription = await ui.service.pushManager.getSubscription();
@@ -306,8 +306,8 @@ listling.ListPage = class extends micro.core.Page {
         ui.shortcutContext.add("C", this._data.toggleSettings);
         ui.addEventListener("list-items-move", this);
 
-        this.ready.when(micro.core.request(async () => {
-            const setUpItems = async () => {
+        this.ready.when(micro.core.request(async() => {
+            const setUpItems = async() => {
                 const items = await ui.call("GET", `/api/lists/${this._data.lst.id}/items`);
                 this._items = new micro.bind.Watchable(items);
             };
@@ -417,7 +417,7 @@ listling.ListPage = class extends micro.core.Page {
 
         // Add list to lists of user
         if (ui.user) {
-            (async () => {
+            (async() => {
                 try {
                     await ui.call(
                         "POST", `/api/users/${ui.user.id}/lists`, {list_id: this._data.lst.id}
@@ -499,7 +499,7 @@ listling.ListPage = class extends micro.core.Page {
     }
 
     async _moveItem(item, to) {
-        return await micro.core.action(async () => {
+        return await micro.core.action(async() => {
             ui.dispatchEvent(new CustomEvent("list-items-move", {detail: {item, to}}));
             await ui.call(
                 "POST", `/api/lists/${this._data.lst.id}/items/move`,
@@ -551,7 +551,7 @@ listling.ItemElement = class extends HTMLLIElement {
 
             startEdit: micro.core.action(() => this.startEdit()),
 
-            edit: async () => {
+            edit: async() => {
                 const input = this.querySelector("micro-content-input");
                 const {text, resource} = input.valueAsObject;
                 let value = this._form.elements.value.valueAsNumber;
@@ -614,17 +614,17 @@ listling.ItemElement = class extends HTMLLIElement {
                 }
             },
 
-            trash: micro.core.action(async () => {
+            trash: micro.core.action(async() => {
                 const item = await ui.call("POST", `/api/items/${this._data.item.id}/trash`);
                 this._activity.events.dispatchEvent({type: "trashable-trash", object: item});
             }),
 
-            restore: micro.core.action(async () => {
+            restore: micro.core.action(async() => {
                 const item = await ui.call("POST", `/api/items/${this._data.item.id}/restore`);
                 this._activity.events.dispatchEvent({type: "trashable-restore", object: item});
             }),
 
-            checkUncheck: micro.core.action(async () => {
+            checkUncheck: micro.core.action(async() => {
                 const op = this._data.item.checked ? "uncheck" : "check";
                 const item = await ui.call("POST", `/api/items/${this._data.item.id}/${op}`);
                 this._activity.events.dispatchEvent({type: `item-${op}`, object: item});
@@ -636,7 +636,7 @@ listling.ItemElement = class extends HTMLLIElement {
                 ui.dialog = dialog;
             }),
 
-            voteUnvote: micro.core.action(async () => {
+            voteUnvote: micro.core.action(async() => {
                 if (this._data.votesMeta.user_voted) {
                     const item = Object.assign(
                         {}, this._data.item,
@@ -746,7 +746,7 @@ listling.ItemElement = class extends HTMLLIElement {
     }
 
     attachedCallback() {
-        (async () => {
+        (async() => {
             await ui.page.ready;
             this._activity = ui.page.activity;
         })().catch(micro.util.catch);
